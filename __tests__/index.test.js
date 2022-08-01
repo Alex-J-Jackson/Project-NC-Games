@@ -46,15 +46,16 @@ describe("GET /api/reviews/:review_id", () => {
         const { review } = body;
         expect(review).toEqual(
           expect.objectContaining({
-            review_id: expect.any(Number),
-            title: expect.any(String),
-            review_body: expect.any(String),
-            designer: expect.any(String),
-            review_img_url: expect.any(String),
-            votes: expect.any(Number),
-            category: expect.any(String),
-            owner: expect.any(String),
-            created_at: expect.any(String),
+            review_id: 3,
+            title: "Ultimate Werewolf",
+            review_body: "We couldn't find the werewolf!",
+            designer: "Akihisa Okui",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            votes: 5,
+            category: "social deduction",
+            owner: "bainesface",
+            created_at: "2021-01-18T10:01:41.251Z",
           })
         );
       });
@@ -64,7 +65,7 @@ describe("GET /api/reviews/:review_id", () => {
       .get("/api/reviews/twelve")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid input");
+        expect(body.msg).toBe("Invalid input or ID");
       });
   });
   test("returns error 404 when client inputs a valid id not in the database", () => {
@@ -73,6 +74,58 @@ describe("GET /api/reviews/:review_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("ID not found");
+      });
+  });
+});
+
+describe("PATCH /api/reviews/:review_id", () => {
+  test("should update (increase) the number of votes in the specified review object by the amount given and return the object", () => {
+    return request(app)
+      .patch("/api/reviews/4")
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review.votes).toBe(12);
+      });
+  });
+  test("should update (decrease) the number of votes in the specified review object by the amount given and return the object", () => {
+    return request(app)
+      .patch("/api/reviews/4")
+      .send({ inc_votes: -5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review.votes).toBe(2);
+      });
+  });
+  test("returns 400 when passed an object with invalid number", () => {
+    return request(app)
+      .patch("/api/reviews/4")
+      .send({ inc_votes: "five" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
+  test("returns 400 when passed an object with other invalid formatting", () => {
+    return request(app)
+      .patch("/api/reviews/4")
+      .send({ votes: 5 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input format");
+      });
+  });
+  test("returns 400 when votes would update to a negative number", () => {
+    return request(app)
+      .patch("/api/reviews/4")
+      .send({ inc_votes: -15 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "No. of votes cannot be negative: current vote count is: 7"
+        );
       });
   });
 });

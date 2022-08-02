@@ -1,5 +1,7 @@
 const db = require("../db/connection");
 
+// GET
+
 exports.selectCategories = () => {
   return db
     .query(`SELECT * FROM categories;`)
@@ -9,6 +11,12 @@ exports.selectCategories = () => {
     .catch((err) => {
       return err;
     });
+};
+
+exports.selectUsers = () => {
+  return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
+    return users;
+  });
 };
 
 exports.selectReviewById = (review_id) => {
@@ -25,6 +33,8 @@ exports.selectReviewById = (review_id) => {
       throw err;
     });
 };
+
+// PATCH
 
 exports.updateVotes = (review_id, voteShift) => {
   const { inc_votes } = voteShift;

@@ -3,6 +3,7 @@ const app = express();
 app.use(express.json());
 const {
   getCategories,
+  getUsers,
   getReviewById,
   patchVotes,
 } = require("./controllers/controllers");
@@ -16,6 +17,8 @@ app.get("/api/categories", getCategories);
 
 app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", patchVotes);
+
+app.get("/api/users", getUsers);
 
 // ERROR HANDLING
 

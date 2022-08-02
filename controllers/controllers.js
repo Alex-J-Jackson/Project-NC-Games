@@ -1,8 +1,11 @@
 const {
   selectCategories,
+  selectUsers,
   selectReviewById,
   updateVotes,
 } = require("../models/models");
+
+// GET
 
 exports.getCategories = (req, res, next) => {
   selectCategories()
@@ -12,6 +15,12 @@ exports.getCategories = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers().then((users) => {
+    res.status(200).send({ users });
+  });
 };
 
 exports.getReviewById = (req, res, next) => {
@@ -24,6 +33,8 @@ exports.getReviewById = (req, res, next) => {
       next(err);
     });
 };
+
+// PATCH
 
 exports.patchVotes = (req, res, next) => {
   const { review_id } = req.params;

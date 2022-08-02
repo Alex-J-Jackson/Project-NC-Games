@@ -3,25 +3,15 @@ const db = require("../db/connection");
 // GET
 
 exports.selectCategories = () => {
-  return db
-    .query(`SELECT * FROM categories;`)
-    .then(({ rows: categories }) => {
-      return categories;
-    })
-    .catch((err) => {
-      throw err;
-    });
+  return db.query(`SELECT * FROM categories;`).then(({ rows: categories }) => {
+    return categories;
+  });
 };
 
 exports.selectUsers = () => {
-  return db
-    .query(`SELECT * FROM users;`)
-    .then(({ rows: users }) => {
-      return users;
-    })
-    .catch((err) => {
-      throw err;
-    });
+  return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
+    return users;
+  });
 };
 
 exports.selectReviews = () => {
@@ -35,9 +25,6 @@ exports.selectReviews = () => {
     )
     .then(({ rows: reviews }) => {
       return reviews;
-    })
-    .catch((err) => {
-      throw err;
     });
 };
 

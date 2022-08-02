@@ -177,15 +177,6 @@ describe("GET /api/users", () => {
         });
       });
   });
-  test("returns error 404 when client inputs an incorrect route", () => {
-    return request(app)
-      .get("/api/usrs")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
-      });
-  });
-});
 
 describe("GET /api/reviews", () => {
   test("returns an array of review objects with the correct properties ", () => {
@@ -220,14 +211,6 @@ describe("GET /api/reviews", () => {
       .then(({ body }) => {
         const { reviews } = body;
         expect(reviews).toBeSortedBy("created_at", { descending: true });
-      });
-  });
-  test("returns error 404 when client inputs an incorrect route", () => {
-    return request(app)
-      .get("/api/revews")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Route not found");
       });
   });
 });

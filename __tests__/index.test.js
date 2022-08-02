@@ -177,6 +177,7 @@ describe("GET /api/users", () => {
         });
       });
   });
+});
 
 describe("GET /api/reviews", () => {
   test("returns an array of review objects with the correct properties ", () => {

@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
-const { getCategories, getReviewById } = require("./controllers/controllers");
+app.use(express.json());
+const {
+  getCategories,
+  getReviewById,
+  patchVotes,
+} = require("./controllers/controllers");
 const {
   handleServerErrors,
   handlePsqlErrors,
@@ -8,7 +13,9 @@ const {
 } = require("./errors/errors");
 
 app.get("/api/categories", getCategories);
+
 app.get("/api/reviews/:review_id", getReviewById);
+app.patch("/api/reviews/:review_id", patchVotes);
 
 // ERROR HANDLING
 

@@ -128,4 +128,22 @@ describe("PATCH /api/reviews/:review_id", () => {
         );
       });
   });
+  test("returns 400 for an invalid ID", () => {
+    return request(app)
+      .patch("/api/reviews/four")
+      .send({ inc_votes: 5 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
+  test("returns 404 for valid ID not in database", () => {
+    return request(app)
+      .patch("/api/reviews/100")
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("ID not found");
+      });
+  });
 });

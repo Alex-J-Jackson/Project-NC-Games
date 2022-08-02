@@ -34,6 +34,9 @@ exports.updateVotes = (review_id, voteShift) => {
       [review_id, inc_votes]
     )
     .then(({ rows: review }) => {
+      if (!review.length) {
+        return Promise.reject({ status: 404, msg: "ID not found" });
+      }
       if (review[0].votes < 0) {
         const votes = review[0].votes - inc_votes;
         return Promise.reject({

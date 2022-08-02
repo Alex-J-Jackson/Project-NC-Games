@@ -60,6 +60,15 @@ describe("GET /api/reviews/:review_id", () => {
         );
       });
   });
+  test("review object should have a comment_count property giving the total number of comments with the given review_id", () => {
+    return request(app)
+      .get("/api/reviews/3")
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review.comment_count).toBe("3");
+      });
+  });
   test("returns error 400 when client inputs an invalid id", () => {
     return request(app)
       .get("/api/reviews/twelve")

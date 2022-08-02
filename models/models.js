@@ -3,20 +3,29 @@ const db = require("../db/connection");
 // GET
 
 exports.selectCategories = () => {
-  return db
-    .query(`SELECT * FROM categories;`)
-    .then(({ rows: categories }) => {
-      return categories;
-    })
-    .catch((err) => {
-      return err;
-    });
+  return db.query(`SELECT * FROM categories;`).then(({ rows: categories }) => {
+    return categories;
+  });
 };
 
 exports.selectUsers = () => {
   return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
     return users;
   });
+};
+
+exports.selectReviews = () => {
+  return db
+    .query(
+      `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count 
+      FROM reviews 
+      LEFT JOIN comments ON reviews.review_id=comments.review_id
+      GROUP BY reviews.review_id
+      ORDER BY created_at DESC;`
+    )
+    .then(({ rows: reviews }) => {
+      return reviews;
+    });
 };
 
 exports.selectReviewById = (review_id) => {

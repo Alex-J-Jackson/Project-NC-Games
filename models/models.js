@@ -22,7 +22,7 @@ exports.selectReviewById = (review_id) => {
       }
     })
     .catch((err) => {
-      return Promise.reject(err);
+      throw err;
     });
 };
 
@@ -37,16 +37,16 @@ exports.updateVotes = (review_id, voteShift) => {
       if (!review.length) {
         return Promise.reject({ status: 404, msg: "ID not found" });
       }
-      if (review[0].votes < 0) {
-        const votes = review[0].votes - inc_votes;
-        return Promise.reject({
-          status: 400,
-          msg: `No. of votes cannot be negative: current vote count is: ${votes}`,
-        });
-      }
+      // if (review[0].votes < 0) {
+      //   const votes = review[0].votes - inc_votes;
+      //   return Promise.reject({
+      //     status: 400,
+      //     msg: `No. of votes cannot be negative: current vote count is: ${votes}`,
+      //   });
+      // }
       return review[0];
     })
     .catch((err) => {
-      return Promise.reject(err);
+      throw err;
     });
 };

@@ -117,17 +117,17 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(body.msg).toBe("Invalid input format");
       });
   });
-  test("returns 400 when votes would update to a negative number", () => {
-    return request(app)
-      .patch("/api/reviews/4")
-      .send({ inc_votes: -15 })
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe(
-          "No. of votes cannot be negative: current vote count is: 7"
-        );
-      });
-  });
+  // test("returns 400 when votes would update to a negative number", () => {
+  //   return request(app)
+  //     .patch("/api/reviews/4")
+  //     .send({ inc_votes: -15 })
+  //     .expect(400)
+  //     .then(({ body }) => {
+  //       expect(body.msg).toBe(
+  //         "No. of votes cannot be negative: current vote count is: 7"
+  //       );
+  //     });
+  // });
   test("returns 400 for an invalid ID", () => {
     return request(app)
       .patch("/api/reviews/four")

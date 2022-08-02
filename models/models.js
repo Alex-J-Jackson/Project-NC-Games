@@ -9,14 +9,36 @@ exports.selectCategories = () => {
       return categories;
     })
     .catch((err) => {
-      return err;
+      throw err;
     });
 };
 
 exports.selectUsers = () => {
-  return db.query(`SELECT * FROM users;`).then(({ rows: users }) => {
-    return users;
-  });
+  return db
+    .query(`SELECT * FROM users;`)
+    .then(({ rows: users }) => {
+      return users;
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
+exports.selectReviews = () => {
+  return db
+    .query(
+      `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count 
+      FROM reviews 
+      LEFT JOIN comments ON reviews.review_id=comments.review_id
+      GROUP BY reviews.review_id
+      ORDER BY created_at DESC;`
+    )
+    .then(({ rows: reviews }) => {
+      return reviews;
+    })
+    .catch((err) => {
+      throw err;
+    });
 };
 
 exports.selectReviewById = (review_id) => {

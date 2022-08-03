@@ -66,6 +66,24 @@ exports.selectReviewComments = (review_id) => {
     });
 };
 
+// POST
+
+exports.addReviewComment = (review_id, comment) => {
+  const { username, body } = comment;
+  return db
+    .query(
+      `INSERT INTO comments (body, review_id, author)
+     VALUES ($1, $2, $3) RETURNING *;`,
+      [body, review_id, username]
+    )
+    .then(({ rows: comment }) => {
+      return comment[0];
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
 // PATCH
 
 exports.updateVotes = (review_id, voteShift) => {

@@ -7,6 +7,7 @@ const {
   getReviews,
   getReviewById,
   getReviewComments,
+  postReviewComment,
   patchVotes,
 } = require("./controllers/controllers");
 const {
@@ -22,6 +23,7 @@ app.get("/api/users", getUsers);
 app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/reviews/:review_id/comments", getReviewComments);
+app.post("/api/reviews/:review_id/comments", postReviewComment);
 app.patch("/api/reviews/:review_id", patchVotes);
 
 // ERROR HANDLING

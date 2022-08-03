@@ -302,4 +302,21 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(body.msg).toBe("ID or user not found");
       });
   });
+  test("returns 400 for invalid comment object", () => {
+    return request(app)
+      .post("/api/reviews/5/comments")
+      .send({ username: "bainesface", body: undefined })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input format");
+      });
+  });
+  test("returns 400 for invalid review_id", () => {
+    return request(app)
+      .get("/api/reviews/five/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
 });

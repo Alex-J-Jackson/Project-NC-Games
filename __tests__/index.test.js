@@ -214,6 +214,45 @@ describe("GET /api/reviews", () => {
         expect(reviews).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test("should accept a sort_by query that sorts the data by a specified column (default desc)", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("should accept an order query that can specifiy asc or desc", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("votes", { ascending: true });
+      });
+  });
+  test("should accept a category query that filters the data by the given value", () => {
+    return request(app)
+      .get("/api/reviews?category=social%20deduction")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(10);
+        const filtered = reviews.every(
+          (review) => review.category === "social deduction"
+        );
+        expect(filtered).toBe(true);
+      });
+  });
+  test("should return 400 for an invalid query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=up")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid query");
+      });
+  });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {

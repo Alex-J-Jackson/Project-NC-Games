@@ -232,7 +232,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
               created_at: expect.any(String),
               author: expect.any(String),
               body: expect.any(String),
-              review_id: expect.any(Number),
+              review_id: 2,
             })
           );
         });
@@ -258,6 +258,62 @@ describe("GET /api/reviews/:review_id/comments", () => {
   test("returns 400 for an invalid ID", () => {
     return request(app)
       .get("/api/reviews/two/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
+});
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("adds a comment to database with username and body and returns the added comments", () => {
+    return request(app)
+      .post("/api/reviews/5/comments")
+      .send({ username: "bainesface", body: "test-body" })
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toEqual(
+          expect.objectContaining({
+            body: "test-body",
+            votes: 0,
+            author: "bainesface",
+            review_id: 5,
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("returns 404 for valid ID not in database", () => {
+    return request(app)
+      .post("/api/reviews/1000/comments")
+      .send({ username: "bainesface", body: "test-body" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("ID or user not found");
+      });
+  });
+  test("returns 404 for usernames not in database", () => {
+    return request(app)
+      .post("/api/reviews/5/comments")
+      .send({ username: "not-a-user", body: "test-body" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("ID or user not found");
+      });
+  });
+  test("returns 400 for invalid comment object", () => {
+    return request(app)
+      .post("/api/reviews/5/comments")
+      .send({ username: "bainesface", body: undefined })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input format");
+      });
+  });
+  test("returns 400 for invalid review_id", () => {
+    return request(app)
+      .get("/api/reviews/five/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid input or ID");

@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const checkExists = require("../utils/check-exists");
 
 // GET
 
@@ -43,6 +44,21 @@ exports.selectReviewById = (review_id) => {
         return Promise.reject({ status: 404, msg: "ID not found" });
       } else {
         return review[0];
+      }
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
+exports.selectReviewComments = (review_id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE review_id = $1;`, [review_id])
+    .then(({ rows: comments }) => {
+      if (!comments.length) {
+        return checkExists("reviews", "review_id", review_id);
+      } else {
+        return comments;
       }
     })
     .catch((err) => {

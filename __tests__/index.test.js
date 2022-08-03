@@ -179,7 +179,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/reviews", () => {
+describe.only("GET /api/reviews", () => {
   test("returns an array of review objects with the correct properties ", () => {
     return request(app)
       .get("/api/reviews")
@@ -232,13 +232,13 @@ describe("GET /api/reviews", () => {
         expect(reviews).toBeSortedBy("votes", { ascending: true });
       });
   });
-  test("should accept a category query that filters the data by the given value", () => {
+  test.only("should accept a category query that filters the data by the given value", () => {
     return request(app)
       .get("/api/reviews?category=social%20deduction")
       .expect(200)
       .then(({ body }) => {
         const { reviews } = body;
-        expect(reviews).toHaveLength(10);
+        expect(reviews).toHaveLength(11);
         const filtered = reviews.every(
           (review) => review.category === "social deduction"
         );

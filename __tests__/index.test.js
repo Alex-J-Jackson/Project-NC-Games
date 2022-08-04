@@ -392,3 +392,22 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("GET /api", () => {
+  test("returns an array of all available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        const { endpoints } = body;
+        expect(endpoints).toHaveLength(8);
+        endpoints.forEach((endpoint) => {
+          expect.objectContaining({
+            Endpoint: expect.any(String),
+            Method: expect.any(String),
+            Description: expect.any(String),
+          });
+        });
+      });
+  });
+});

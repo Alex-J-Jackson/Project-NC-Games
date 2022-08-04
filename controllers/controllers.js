@@ -1,4 +1,5 @@
 const {
+  selectEndpoints,
   selectCategories,
   selectUsers,
   selectReviews,
@@ -10,6 +11,16 @@ const {
 } = require("../models/models");
 
 // GET
+
+exports.getEndpoints = (req, res, next) => {
+  selectEndpoints()
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 exports.getCategories = (req, res, next) => {
   selectCategories()

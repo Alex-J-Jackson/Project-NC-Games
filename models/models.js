@@ -4,6 +4,12 @@ const checkExists = require("../utils/check-exists");
 
 // GET
 
+exports.selectEndpoints = () => {
+  return db.query(`SELECT * FROM endpoints;`).then(({ rows: endpoints }) => {
+    return endpoints;
+  });
+};
+
 exports.selectCategories = () => {
   return db.query(`SELECT * FROM categories;`).then(({ rows: categories }) => {
     return categories;

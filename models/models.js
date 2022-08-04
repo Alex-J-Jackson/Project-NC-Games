@@ -1,3 +1,4 @@
+const { ParameterDescriptionMessage } = require("pg-protocol/dist/messages");
 const db = require("../db/connection");
 const checkExists = require("../utils/check-exists");
 
@@ -15,18 +16,36 @@ exports.selectUsers = () => {
   });
 };
 
-exports.selectReviews = () => {
-  return db
-    .query(
-      `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count 
-      FROM reviews 
-      LEFT JOIN comments ON reviews.review_id=comments.review_id
-      GROUP BY reviews.review_id
-      ORDER BY created_at DESC;`
-    )
-    .then(({ rows: reviews }) => {
-      return reviews;
-    });
+exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
+  const validSorts = [
+    "review_id",
+    "title",
+    "category",
+    "designer",
+    "owner",
+    "review_body",
+    "review_img_url",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const validOrders = ["asc", "desc"];
+  const categoryValue = [];
+  let queryStr = `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count 
+                  FROM reviews LEFT JOIN comments ON reviews.review_id=comments.review_id `;
+  if (category) {
+    queryStr += `WHERE category = $1 `;
+    categoryValue.push(category);
+  }
+  queryStr += `GROUP BY reviews.review_id `;
+  if (validSorts.includes(sort_by) && validOrders.includes(order)) {
+    queryStr += `ORDER BY ${sort_by} ${order};`;
+  } else {
+    return Promise.reject({ status: 400, msg: "Invalid query" });
+  }
+  return db.query(queryStr, categoryValue).then(({ rows: reviews }) => {
+    return reviews;
+  });
 };
 
 exports.selectReviewById = (review_id) => {

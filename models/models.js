@@ -129,3 +129,13 @@ exports.updateVotes = (review_id, voteShift) => {
       throw err;
     });
 };
+
+// DELETE
+
+exports.removeComment = (comment_id) => {
+  return checkExists("comments", "comment_id", comment_id).then(() => {
+    return db.query(`DELETE FROM comments WHERE comment_id = $1;`, [
+      comment_id,
+    ]);
+  });
+};

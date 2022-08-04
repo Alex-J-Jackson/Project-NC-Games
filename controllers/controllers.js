@@ -5,6 +5,7 @@ const {
   selectReviewById,
   selectReviewComments,
   addReviewComment,
+  removeComment,
   updateVotes,
 } = require("../models/models");
 
@@ -83,6 +84,19 @@ exports.patchVotes = (req, res, next) => {
   updateVotes(review_id, req.body)
     .then((review) => {
       res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+// DELETE
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  removeComment(comment_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);

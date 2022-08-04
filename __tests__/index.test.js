@@ -359,3 +359,36 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("should delete a comment with the given ID from database and return 204", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return request(app)
+          .get("/api/reviews/2/comments")
+          .expect(200)
+          .then(({ body }) => {
+            const { comments } = body;
+            expect(comments).toHaveLength(2);
+          });
+      });
+  });
+  test("returns 404 for a valid ID not in database", () => {
+    return request(app)
+      .delete("/api/comments/1000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Resource not found");
+      });
+  });
+  test("returns 400 for an invalid ID", () => {
+    return request(app)
+      .delete("/api/comments/five")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
+});

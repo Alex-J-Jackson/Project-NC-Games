@@ -179,7 +179,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("GET /api/reviews", () => {
+describe("GET /api/reviews", () => {
   test("returns an array of review objects with the correct properties ", () => {
     return request(app)
       .get("/api/reviews")
@@ -232,7 +232,7 @@ describe.only("GET /api/reviews", () => {
         expect(reviews).toBeSortedBy("votes", { ascending: true });
       });
   });
-  test.only("should accept a category query that filters the data by the given value", () => {
+  test("should accept a category query that filters the data by the given value", () => {
     return request(app)
       .get("/api/reviews?category=social%20deduction")
       .expect(200)
@@ -305,7 +305,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
 });
 
 describe("POST /api/reviews/:review_id/comments", () => {
-  test("adds a comment to database with username and body and returns the added comments", () => {
+  test("adds a comment to database with username and body and returns the added comment", () => {
     return request(app)
       .post("/api/reviews/5/comments")
       .send({ username: "bainesface", body: "test-body" })

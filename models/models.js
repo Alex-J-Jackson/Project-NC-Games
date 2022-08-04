@@ -1,3 +1,4 @@
+const { ParameterDescriptionMessage } = require("pg-protocol/dist/messages");
 const db = require("../db/connection");
 const checkExists = require("../utils/check-exists");
 
@@ -39,6 +40,8 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
   queryStr += `GROUP BY reviews.review_id `;
   if (validSorts.includes(sort_by) && validOrders.includes(order)) {
     queryStr += `ORDER BY ${sort_by} ${order};`;
+  } else {
+    return Promise.reject({ status: 400, msg: "Invalid query" });
   }
   return db.query(queryStr, categoryValue).then(({ rows: reviews }) => {
     return reviews;

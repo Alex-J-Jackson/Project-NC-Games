@@ -4,7 +4,7 @@
   "description": "bc-nc-games",
   "main": "index.js",
   "scripts": {
-    "start": "npm install pg-format && node listen.js",
+    "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",

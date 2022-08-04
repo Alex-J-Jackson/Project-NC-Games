@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 const {
+  getEndpoints,
   getCategories,
   getUsers,
   getReviews,
@@ -16,6 +17,8 @@ const {
   handlePsqlErrors,
   handleCustomErrors,
 } = require("./errors/errors");
+
+app.get("/api", getEndpoints);
 
 app.get("/api/categories", getCategories);
 

@@ -1,6 +1,7 @@
 const { ParameterDescriptionMessage } = require("pg-protocol/dist/messages");
 const db = require("../db/connection");
 const checkExists = require("../utils/check-exists");
+const { validSorts, validOrders } = require("./valid-sorts-valid-orders");
 
 // GET
 
@@ -23,22 +24,10 @@ exports.selectUsers = () => {
 };
 
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
-  const validSorts = [
-    "review_id",
-    "title",
-    "category",
-    "designer",
-    "owner",
-    "review_body",
-    "review_img_url",
-    "created_at",
-    "votes",
-    "comment_count",
-  ];
-  const validOrders = ["asc", "desc"];
   const categoryValue = [];
-  let queryStr = `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count 
-                  FROM reviews LEFT JOIN comments ON reviews.review_id=comments.review_id `;
+  let queryStr = "";
+  queryStr += `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count FROM reviews 
+               LEFT JOIN comments ON reviews.review_id=comments.review_id `;
   if (category) {
     queryStr += `WHERE category = $1 `;
     categoryValue.push(category);
@@ -122,13 +111,6 @@ exports.updateVotes = (review_id, voteShift) => {
       if (!review.length) {
         return Promise.reject({ status: 404, msg: "ID not found" });
       }
-      // if (review[0].votes < 0) {
-      //   const votes = review[0].votes - inc_votes;
-      //   return Promise.reject({
-      //     status: 400,
-      //     msg: `No. of votes cannot be negative: current vote count is: ${votes}`,
-      //   });
-      // }
       return review[0];
     })
     .catch((err) => {

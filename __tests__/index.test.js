@@ -411,3 +411,31 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe("GET /api/users/:username", () => {
+  test.only("returns a user object for the requested username", () => {
+    return request(app)
+      .get("/api/users/bainesface")
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body;
+        console.log(user);
+        expect(user).toEqual(
+          expect.objectContaining({
+            username: "bainesface",
+            name: "sarah",
+            avatar_url:
+              "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+          })
+        );
+      });
+  });
+  test("returns 404 for a username not in the database", () => {
+    return request(app)
+      .get("/api/users/notauser")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username not found");
+      });
+  });
+});

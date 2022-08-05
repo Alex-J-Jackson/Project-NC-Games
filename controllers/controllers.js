@@ -2,6 +2,7 @@ const {
   selectEndpoints,
   selectCategories,
   selectUsers,
+  selectUser,
   selectReviews,
   selectReviewById,
   selectReviewComments,
@@ -12,7 +13,7 @@ const {
 
 // GET
 
-exports.getEndpoints = (req, res, next) => {
+exports.getEndpoints = (_, res, next) => {
   selectEndpoints()
     .then((endpoints) => {
       res.status(200).send({ endpoints });
@@ -22,7 +23,7 @@ exports.getEndpoints = (req, res, next) => {
     });
 };
 
-exports.getCategories = (req, res, next) => {
+exports.getCategories = (_, res, next) => {
   selectCategories()
     .then((categories) => {
       res.status(200).send({ categories });
@@ -32,10 +33,22 @@ exports.getCategories = (req, res, next) => {
     });
 };
 
-exports.getUsers = (req, res, next) => {
+exports.getUsers = (_, res, next) => {
   selectUsers()
     .then((users) => {
       res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUser = (req, res, next) => {
+  const { username } = req.params;
+  selectUser(username)
+    .then((user) => {
+      console.log(user);
+      res.status(200).send({ user });
     })
     .catch((err) => {
       next(err);

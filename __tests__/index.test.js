@@ -438,3 +438,62 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test("should update (increase) the number of votes in the specified review object by the amount given and return the object", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment.votes).toBe(21);
+      });
+  });
+  test("should update (decrease) the number of votes in the specified review object by the amount given and return the object", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: -5 })
+      .expect(200)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment.votes).toBe(11);
+      });
+  });
+  test("returns 400 when passed an object with invalid number", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: "five" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
+  test("returns 400 when passed an object with other invalid formatting", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ votes: 5 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input format");
+      });
+  });
+  test("returns 400 for an invalid ID", () => {
+    return request(app)
+      .patch("/api/comments/one")
+      .send({ inc_votes: 5 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input or ID");
+      });
+  });
+  test("returns 404 for valid ID not in database", () => {
+    return request(app)
+      .patch("/api/comments/1000")
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("ID not found");
+      });
+  });
+});

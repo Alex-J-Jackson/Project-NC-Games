@@ -112,7 +112,7 @@ exports.addReviewComment = (review_id, comment) => {
 
 // PATCH
 
-exports.updateVotes = (review_id, voteShift) => {
+exports.updateReviewVotes = (review_id, voteShift) => {
   const { inc_votes } = voteShift;
   return db
     .query(
@@ -122,8 +122,28 @@ exports.updateVotes = (review_id, voteShift) => {
     .then(({ rows: review }) => {
       if (!review.length) {
         return Promise.reject({ status: 404, msg: "ID not found" });
+      } else {
+        return review[0];
       }
-      return review[0];
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
+exports.updateCommentVotes = (comment_id, voteShift) => {
+  const { inc_votes } = voteShift;
+  return db
+    .query(
+      `UPDATE comments SET votes = votes + $2 WHERE comment_id = $1 RETURNING *;`,
+      [comment_id, inc_votes]
+    )
+    .then(({ rows: comment }) => {
+      if (!comment.length) {
+        return Promise.reject({ status: 404, msg: "ID not found" });
+      } else {
+        return comment[0];
+      }
     })
     .catch((err) => {
       throw err;

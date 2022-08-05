@@ -8,7 +8,8 @@ const {
   selectReviewComments,
   addReviewComment,
   removeComment,
-  updateVotes,
+  updateReviewVotes,
+  updateCommentVotes,
 } = require("../models/models");
 
 // GET
@@ -102,11 +103,22 @@ exports.postReviewComment = (req, res, next) => {
 
 // PATCH
 
-exports.patchVotes = (req, res, next) => {
+exports.patchReviewVotes = (req, res, next) => {
   const { review_id } = req.params;
-  updateVotes(review_id, req.body)
+  updateReviewVotes(review_id, req.body)
     .then((review) => {
       res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchCommentVotes = (req, res, next) => {
+  const { comment_id } = req.params;
+  updateCommentVotes(comment_id, req.body)
+    .then((comment) => {
+      res.status(200).send({ comment });
     })
     .catch((err) => {
       next(err);

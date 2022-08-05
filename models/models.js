@@ -23,6 +23,18 @@ exports.selectUsers = () => {
   });
 };
 
+exports.selectUser = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1;`, [username])
+    .then(({ rows: user }) => {
+      if (!user.length) {
+        return Promise.reject({ status: 404, msg: "Username not found" });
+      } else {
+        return user[0];
+      }
+    });
+};
+
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
   const categoryValue = [];
   let queryStr = "";

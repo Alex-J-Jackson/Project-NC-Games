@@ -413,13 +413,12 @@ describe("GET /api", () => {
 });
 
 describe("GET /api/users/:username", () => {
-  test.only("returns a user object for the requested username", () => {
+  test("returns a user object for the requested username", () => {
     return request(app)
       .get("/api/users/bainesface")
       .expect(200)
       .then(({ body }) => {
         const { user } = body;
-        console.log(user);
         expect(user).toEqual(
           expect.objectContaining({
             username: "bainesface",

@@ -1,4 +1,3 @@
-const { ParameterDescriptionMessage } = require("pg-protocol/dist/messages");
 const db = require("../db/connection");
 const checkExists = require("../utils/check-exists");
 const { validSorts, validOrders } = require("./valid-sorts-valid-orders");

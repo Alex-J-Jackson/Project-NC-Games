@@ -1,7 +1,0 @@
-You are now connected to database "nc_games_test" as user "alexander".
- comment_id |          body          | review_id |   author   | votes |       created_at        
-------------+------------------------+-----------+------------+-------+-------------------------
-          1 | I loved this game too! |         2 | bainesface |    21 | 2017-11-22 12:43:33.389
-(1 row)
-
-UPDATE 1

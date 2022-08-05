@@ -93,6 +93,10 @@ exports.selectReviewComments = (review_id) => {
 
 // POST
 
+exports.addReview = (review) => {
+  const { owner, title, review_body, designer, category } = review;
+};
+
 exports.addReviewComment = (review_id, comment) => {
   const { username, body } = comment;
   return db

@@ -6,6 +6,7 @@ const {
   selectReviews,
   selectReviewById,
   selectReviewComments,
+  addReview,
   addReviewComment,
   removeComment,
   updateReviewVotes,
@@ -89,6 +90,16 @@ exports.getReviewComments = (req, res, next) => {
 };
 
 // POST
+
+exports.postReview = (req, res, next) => {
+  addReview(req.body)
+    .then((review) => {
+      res.status(201).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 exports.postReviewComment = (req, res, next) => {
   const { review_id } = req.params;

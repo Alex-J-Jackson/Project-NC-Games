@@ -497,3 +497,94 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   });
 });
+
+// describe("POST /api/reviews", () => {
+//   test("updates the reviews table with the requested review object", () => {
+//     return request(app)
+//       .post("/api/reviews")
+//       .send({
+//         owner: "mallionaire",
+//         title: "test-title",
+//         review_body: "test-body",
+//         designer: "test-designer",
+//         category: "social deduction",
+//       })
+//       .expect(201)
+//       .then(({ body }) => {
+//         const { review } = body;
+//         expect(review).toEqual(
+//           expect.objectContaining({
+//             review_id: 14,
+//             owner: "mallionaire",
+//             title: "test-title",
+//             reivew_body: "test-body",
+//             designer: "test-designer",
+//             category: "social deduction",
+//             vote: 0,
+//             created_at: expect.any(String),
+//             comment_count: 0,
+//           })
+//         );
+//       });
+//   });
+//   test("returns 400 for username not existing", () => {
+//     return request(app)
+//       .post("/api/reviews")
+//       .send({
+//         owner: "no-username",
+//         title: "test-title",
+//         reivew_body: "test-body",
+//         designer: "test-designer",
+//         category: "social deduction",
+//       })
+//       .expect(400)
+//       .then(({ body }) => {
+//         expect(body.msg).toBe("");
+//       });
+//   });
+//   test("returns 400 for category no existing", () => {
+//     return request(app)
+//       .post("/api/reviews")
+//       .send({
+//         owner: "mallionaire",
+//         title: "test-title",
+//         reivew_body: "test-body",
+//         designer: "test-designer",
+//         category: "not-a-category",
+//       })
+//       .expect(400)
+//       .then(({ body }) => {
+//         expect(body.msg).toBe("");
+//       });
+//   });
+//   test("returns 400 for incorrect formatting", () => {
+//     return request(app)
+//       .post("/api/reviews")
+//       .send({
+//         ownerr: "mallionaire",
+//         title: "test-title",
+//         reivew_body: "test-body",
+//         designer: "test-designer",
+//         category: "not-a-category",
+//       })
+//       .expect(400)
+//       .then(({ body }) => {
+//         expect(body.msg).toBe("");
+//       });
+//   });
+//   test("returns 400 for missing information", () => {
+//     return request(app)
+//       .post("/api/reviews")
+//       .send({
+//         ownerr: "mallionaire",
+//         title: undefined,
+//         reivew_body: "test-body",
+//         designer: "test-designer",
+//         category: "not-a-category",
+//       })
+//       .expect(400)
+//       .then(({ body }) => {
+//         expect(body.msg).toBe("");
+//       });
+//   });
+// });

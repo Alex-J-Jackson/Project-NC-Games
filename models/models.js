@@ -55,8 +55,10 @@ exports.selectReviews = (
   } else {
     return Promise.reject({ status: 400, msg: "Invalid query" });
   }
-  if (typeof +limit === "number" && typeof +p === "number") {
+  if (/[^a-z]/i.test(limit) && /[^a-z]/i.test(p)) {
     queryStr += `LIMIT ${limit} OFFSET ${(p - 1) * limit};`;
+  } else {
+    return Promise.reject({ status: 400, msg: "Invalid limit or page query" });
   }
   return db.query(queryStr, categoryValue).then(({ rows: reviews }) => {
     return reviews;

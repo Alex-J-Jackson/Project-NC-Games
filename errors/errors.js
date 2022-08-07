@@ -13,6 +13,8 @@ exports.handlePsqlErrors = (err, req, res, next) => {
     res.status(400).send({ msg: "Invalid input" });
   } else if (err.code === "23503") {
     res.status(404).send({ msg: "ID or user not found" });
+  } else if (err.code === "42703") {
+    res.status(400).send({ msg: "Invalid limit or page query" });
   } else {
     next(err);
   }

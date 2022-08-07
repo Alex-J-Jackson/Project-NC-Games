@@ -186,7 +186,7 @@ describe("GET /api/reviews", () => {
       .expect(200)
       .then(({ body }) => {
         const { reviews } = body;
-        expect(reviews).toHaveLength(13);
+        expect(reviews).toHaveLength(10);
         reviews.forEach((review) => {
           expect(review).toEqual(
             expect.objectContaining({
@@ -199,7 +199,7 @@ describe("GET /api/reviews", () => {
               category: expect.any(String),
               owner: expect.any(String),
               created_at: expect.any(String),
-              comment_count: expect.any(String),
+              comment_count: expect.any(Number),
             })
           );
         });
@@ -238,7 +238,7 @@ describe("GET /api/reviews", () => {
       .expect(200)
       .then(({ body }) => {
         const { reviews } = body;
-        expect(reviews).toHaveLength(11);
+        expect(reviews).toHaveLength(10);
         const filtered = reviews.every(
           (review) => review.category === "social deduction"
         );
@@ -251,6 +251,75 @@ describe("GET /api/reviews", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid query");
+      });
+  });
+  test("should accept a limit query that limits the number of results returned (defaults to 10)", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(10);
+      });
+  });
+  test("should accept a limit query that limits the number of results returned", () => {
+    return request(app)
+      .get("/api/reviews?limit=5")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(5);
+      });
+  });
+  test("should accept a p query that specifies the page at which to start", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=review_id&order=asc&limit=5&p=2")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(5);
+        expect(reviews[0]).toEqual(
+          expect.objectContaining({
+            review_id: 6,
+            title: "Occaecat consequat officia in quis commodo.",
+            designer: "Ollie Tabooger",
+            owner: "mallionaire",
+            review_img_url:
+              "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+            review_body:
+              "Fugiat fugiat enim officia laborum quis. Aliquip laboris non nulla nostrud magna exercitation in ullamco aute laborum cillum nisi sint. Culpa excepteur aute cillum minim magna fugiat culpa adipisicing eiusmod laborum ipsum fugiat quis. Mollit consectetur amet sunt ex amet tempor magna consequat dolore cillum adipisicing. Proident est sunt amet ipsum magna proident fugiat deserunt mollit officia magna ea pariatur. Ullamco proident in nostrud pariatur. Minim consequat pariatur id pariatur adipisicing.",
+            category: "social deduction",
+            created_at: "2020-09-13T14:19:28.077Z",
+            votes: 8,
+            comment_count: 0,
+          })
+        );
+      });
+  });
+  test("should return 400 for an invalid limit query", () => {
+    return request(app)
+      .get("/api/reviews?limit=five")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid limit or page query");
+      });
+  });
+  test("should return 400 for an invalid p query", () => {
+    return request(app)
+      .get("/api/reviews?limit=5&p=two")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid limit or page query");
+      });
+  });
+  test("review objects should have a total_count property which counts the number of filtered artciles discounting the limit", () => {
+    return request(app)
+      .get("/api/reviews?category=social%20deduction")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        const totalCount = reviews.every((review) => review.total_count === 11);
+        expect(totalCount).toBe(true);
       });
   });
 });

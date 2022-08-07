@@ -34,10 +34,16 @@ exports.selectUser = (username) => {
     });
 };
 
-exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
+exports.selectReviews = (
+  sort_by = "created_at",
+  order = "desc",
+  category,
+  limit = 10,
+  p = 1
+) => {
   const categoryValue = [];
   let queryStr = "";
-  queryStr += `SELECT reviews.*, COUNT(comments.comment_id) AS comment_count FROM reviews 
+  queryStr += `SELECT reviews.*, COUNT(*) OVER() :: INT AS total_count, COUNT(comments.comment_id) :: INT AS comment_count FROM reviews 
                LEFT JOIN comments ON reviews.review_id=comments.review_id `;
   if (category) {
     queryStr += `WHERE category = $1 `;
@@ -45,9 +51,12 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
   }
   queryStr += `GROUP BY reviews.review_id `;
   if (validSorts.includes(sort_by) && validOrders.includes(order)) {
-    queryStr += `ORDER BY ${sort_by} ${order};`;
+    queryStr += `ORDER BY ${sort_by} ${order} `;
   } else {
     return Promise.reject({ status: 400, msg: "Invalid query" });
+  }
+  if (typeof +limit === "number" && typeof +p === "number") {
+    queryStr += `LIMIT ${limit} OFFSET ${(p - 1) * limit};`;
   }
   return db.query(queryStr, categoryValue).then(({ rows: reviews }) => {
     return reviews;

@@ -12,7 +12,8 @@ module.exports = [
   {
     Endpoint: "/api/reviews",
     Method: "GET",
-    Description: "returns an array of all reviews",
+    Description:
+      "returns an array of all reviews. Takes queries of sort_by, order, category, limit and p",
   },
   {
     Endpoint: "/api/reviews/:review_id",

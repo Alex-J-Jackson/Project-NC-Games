@@ -13,7 +13,7 @@ module.exports = [
     Endpoint: "/api/reviews",
     Method: "GET",
     Description:
-      "returns an array of all reviews. Takes queries of sort_by, order, category, limit and p",
+      "returns an array of all reviews. Takes queries of sort_by, order, category, limit and p.",
   },
   {
     Endpoint: "/api/reviews/:review_id",
@@ -30,6 +30,12 @@ module.exports = [
     Method: "POST",
     Description:
       "adds a new comment to the database linked to the specified review (returns the added comment)",
+  },
+  {
+    Endpoint: "/api/reviews",
+    Method: "POST",
+    Description:
+      "adds a new review to the database: takes key-values of owner, title, review_body, designer and category.",
   },
   {
     Endpoint: "/api/reviews/:review_id",

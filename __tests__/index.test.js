@@ -678,14 +678,14 @@ describe("POST /api/reviews", () => {
   });
 });
 
-describe("DELETE /api/reviews/:review_id", () => {
+describe.only("DELETE /api/reviews/:review_id", () => {
   test("deletes the review with specified id from database", () => {
     return request(app)
-      .delete("/api/reviews/2")
+      .delete("/api/reviews/3")
       .expect(204)
       .then(() => {
         return request(app)
-          .get("/api/reviews/2")
+          .get("/api/reviews/3")
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("ID not found");

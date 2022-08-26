@@ -152,14 +152,12 @@ exports.deleteComment = (req, res, next) => {
 };
 
 exports.deleteReview = (req, res, next) => {
-  console.log("here in controllers");
   const { review_id } = req.params;
   removeReview(review_id)
     .then(() => {
       res.status(204).send();
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };

@@ -678,7 +678,7 @@ describe("POST /api/reviews", () => {
   });
 });
 
-describe.only("DELETE /api/reviews/:review_id", () => {
+describe("DELETE /api/reviews/:review_id", () => {
   test("deletes the review with specified id from database", () => {
     return request(app)
       .delete("/api/reviews/3")

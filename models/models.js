@@ -39,15 +39,23 @@ exports.selectReviews = (
   order = "desc",
   category,
   limit = 10,
-  p = 1
+  p = 1,
+  user
 ) => {
-  const categoryValue = [];
+  const categoryOrUserValue = [];
   let queryStr = "";
   queryStr += `SELECT reviews.*, COUNT(*) OVER() :: INT AS total_count, COUNT(comments.comment_id) :: INT AS comment_count FROM reviews 
                LEFT JOIN comments ON reviews.review_id=comments.review_id `;
   if (category) {
     queryStr += `WHERE category = $1 `;
-    categoryValue.push(category);
+    categoryOrUserValue.push(category);
+    if (user) {
+      queryStr += `AND owner = $2 `;
+      categoryOrUserValue.push(user);
+    }
+  } else if (user) {
+    queryStr += `WHERE owner = $1 `;
+    categoryOrUserValue.push(user);
   }
   queryStr += `GROUP BY reviews.review_id `;
   if (validSorts.includes(sort_by) && validOrders.includes(order)) {
@@ -60,7 +68,7 @@ exports.selectReviews = (
   } else {
     return Promise.reject({ status: 400, msg: "Invalid limit or page query" });
   }
-  return db.query(queryStr, categoryValue).then(({ rows: reviews }) => {
+  return db.query(queryStr, categoryOrUserValue).then(({ rows: reviews }) => {
     return reviews;
   });
 };
@@ -100,16 +108,6 @@ exports.selectReviewComments = (review_id) => {
     .catch((err) => {
       throw err;
     });
-};
-
-exports.selectReviewsByUsername = (username) => {
-  return checkExists("users", "username", username).then(() => {
-    return db
-      .query(`SELECT * FROM reviews WHERE owner = $1`, [username])
-      .then(({ rows: reviews }) => {
-        return reviews;
-      });
-  });
 };
 
 // POST

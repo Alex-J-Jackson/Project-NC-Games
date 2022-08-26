@@ -59,8 +59,8 @@ exports.getUser = (req, res, next) => {
 };
 
 exports.getReviews = (req, res, next) => {
-  const { sort_by, order, category, limit, p } = req.query;
-  selectReviews(sort_by, order, category, limit, p)
+  const { sort_by, order, category, limit, p, user } = req.query;
+  selectReviews(sort_by, order, category, limit, p, user)
     .then((reviews) => {
       res.status(200).send({ reviews });
     })
@@ -85,17 +85,6 @@ exports.getReviewComments = (req, res, next) => {
   selectReviewComments(review_id)
     .then((comments) => {
       res.status(200).send({ comments });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
-exports.getReviewsByUsername = (req, res, next) => {
-  const { username } = req.params;
-  selectReviewsByUsername(username)
-    .then((reviews) => {
-      res.status(200).send({ reviews });
     })
     .catch((err) => {
       next(err);

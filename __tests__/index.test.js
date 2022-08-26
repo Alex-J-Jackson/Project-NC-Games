@@ -322,6 +322,24 @@ describe("GET /api/reviews", () => {
         expect(totalCount).toBe(true);
       });
   });
+  test("should accept a user query and return all reviews by the specified user", () => {
+    return request(app)
+      .get("/api/reviews?user=bainesface")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(1);
+        expect(reviews[0].owner).toBe("bainesface");
+      });
+  });
+  // test("returns 404 for valid username not in database", () => {
+  //   return request(app)
+  //     .get("/api/reviews?user=notauser")
+  //     .expect(404)
+  //     .then(({ body }) => {
+  //       expect(body.msg).toBe("Resource not found");
+  //     });
+  // });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
@@ -692,23 +710,23 @@ describe("DELETE /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("GET /api/reviews/:username", () => {
-  test("returns an array of reviews by the specified user", () => {
-    return request(app)
-      .get("/api/reviews/bainesface")
-      .expect(200)
-      .then(({ body }) => {
-        const { reviews } = body;
-        expect(reviews).toHaveLength(1);
-        expect(reviews[0].owner).toBe("bainesface");
-      });
-  });
-  test("returns 404 for valid username not in database", () => {
-    return request(app)
-      .get("/api/reviews/notauser")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Resource not found");
-      });
-  });
-});
+// describe.only("GET /api/reviews/:username", () => {
+//   test("returns an array of reviews by the specified user", () => {
+//     return request(app)
+//       .get("/api/reviews/bainesface")
+//       .expect(200)
+//       .then(({ body }) => {
+//         const { reviews } = body;
+//         expect(reviews).toHaveLength(1);
+//         expect(reviews[0].owner).toBe("bainesface");
+//       });
+//   });
+//   test("returns 404 for valid username not in database", () => {
+//     return request(app)
+//       .get("/api/reviews/notauser")
+//       .expect(404)
+//       .then(({ body }) => {
+//         expect(body.msg).toBe("Resource not found");
+//       });
+//   });
+// });

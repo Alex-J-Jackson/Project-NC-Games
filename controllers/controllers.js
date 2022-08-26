@@ -11,6 +11,7 @@ const {
   removeComment,
   updateReviewVotes,
   updateCommentVotes,
+  removeReview,
 } = require("../models/models");
 
 // GET
@@ -141,6 +142,17 @@ exports.patchCommentVotes = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
   removeComment(comment_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteReview = (req, res, next) => {
+  const { review_id } = req.params;
+  removeReview(review_id)
     .then(() => {
       res.status(204).send();
     })

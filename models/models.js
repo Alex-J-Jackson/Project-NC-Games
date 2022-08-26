@@ -189,3 +189,9 @@ exports.removeComment = (comment_id) => {
     ]);
   });
 };
+
+exports.removeReview = (review_id) => {
+  return checkExists("reviews", "review_id", review_id).then(() => {
+    return db.query(`DELETE FROM reviews WHERE review_id = $1;`, [review_id]);
+  });
+};

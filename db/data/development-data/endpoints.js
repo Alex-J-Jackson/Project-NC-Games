@@ -48,4 +48,9 @@ module.exports = [
     Method: "DELETE",
     Description: "deletes the specified comment from the database",
   },
+  {
+    Endpoint: "/api/reviews/:review_id",
+    Method: "DELETE",
+    Description: "deletes the specified review from the database",
+  },
 ];

@@ -102,6 +102,16 @@ exports.selectReviewComments = (review_id) => {
     });
 };
 
+exports.selectReviewsByUsername = (username) => {
+  return checkExists("users", "username", username).then(() => {
+    return db
+      .query(`SELECT * FROM reviews WHERE owner = $1`, [username])
+      .then(({ rows: reviews }) => {
+        return reviews;
+      });
+  });
+};
+
 // POST
 
 exports.addReview = (review) => {

@@ -6,12 +6,13 @@ const {
   selectReviews,
   selectReviewById,
   selectReviewComments,
+  selectReviewsByUsername,
   addReview,
   addReviewComment,
   removeComment,
+  removeReview,
   updateReviewVotes,
   updateCommentVotes,
-  removeReview,
 } = require("../models/models");
 
 // GET
@@ -84,6 +85,17 @@ exports.getReviewComments = (req, res, next) => {
   selectReviewComments(review_id)
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getReviewsByUsername = (req, res, next) => {
+  const { username } = req.params;
+  selectReviewsByUsername(username)
+    .then((reviews) => {
+      res.status(200).send({ reviews });
     })
     .catch((err) => {
       next(err);

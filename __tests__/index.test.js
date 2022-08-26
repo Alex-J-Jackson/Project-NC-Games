@@ -681,11 +681,11 @@ describe("POST /api/reviews", () => {
 describe("DELETE /api/reviews/:review_id", () => {
   test("deletes the review with specified id from database", () => {
     return request(app)
-      .delete("/api/reviews/1")
+      .delete("/api/reviews/2")
       .expect(204)
       .then(() => {
         return request(app)
-          .get("/api/reviews/1")
+          .get("/api/reviews/2")
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("ID not found");
